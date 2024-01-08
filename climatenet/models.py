@@ -151,6 +151,8 @@ class CGNet():
             print("Sensitivity: ", t_sensitivity)
             print(np.array_str(np.around(training_confusion_matrix, decimals=3), precision=3))
 
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
             if val_dataset:
                 # Compute and track validation history
                 val_loss, val_aggregate_cm, val_ious, val_dices = self.validate(val_dataset)
