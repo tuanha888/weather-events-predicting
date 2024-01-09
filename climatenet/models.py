@@ -57,7 +57,7 @@ class CGNet():
             # Load model
             self.config = Config(path.join(model_path, 'config.json'))
             self.network = CGNetModule(classes=len(self.config.labels), channels=len(list(self.config.fields)))
-            self.network.load_state_dict(torch.load(path.join(model_path, 'weights.pth')))
+            self.network.load_state_dict(torch.load(path.join(model_path, 'weights.pth'), map_location= torch.device('cpu')))
         else:
             raise ValueError('''You need to specify either a config or a model path.''')
 
@@ -221,8 +221,6 @@ class CGNet():
             dims = [dim for dim in batch.dims if dim != "variable"]
 
             predictions.append(xr.DataArray(preds, coords=coords, dims=dims, attrs=batch.attrs))
-
-        print(predictions)
         return xr.concat(predictions, dim='time')
 
     def validate(self, dataset: ClimateDatasetLabeled):
